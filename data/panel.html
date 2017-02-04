@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+	<style>
+		.progress {
+		    position: relative;
+		}
+
+		.progress span {
+		    position: absolute;
+		    display: block;
+		    width: 100%;
+		    color: black;
+		 }
+		 
+//~ 		 #spinner {
+//~ 		    position: fixed;
+//~ 		    width: 100%;
+//~ 		    height: 100%;
+//~ 		    background: rgba(0,0,0,.15);
+//~ 		    top: 70;
+//~ 		    bottom: 0;
+//~ 		    z-index: 1000;
+//~ 		}
+		#spinner
+		{
+		    position: absolute;
+		    height: 90%;
+		    width: 100%;
+		    margin: 0px;
+		    padding: 0px;
+		    //background: rgba(0,0,0,.05);
+		    z-index: 1002;
+		}
+		
+		
+.cssload-zenith {
+	z-index: 1001;
+	width: 49px;
+	height: 49px;
+	margin: 100px auto;
+	border-radius: 50%;
+	border-top-color: transparent;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	box-shadow: 3px 3px 1px rgb(0,0,0);
+	animation: cssload-spin 690ms infinite linear;
+		-o-animation: cssload-spin 690ms infinite linear;
+		-ms-animation: cssload-spin 690ms infinite linear;
+		-webkit-animation: cssload-spin 690ms infinite linear;
+		-moz-animation: cssload-spin 690ms infinite linear;
+}
+
+
+
+@keyframes cssload-spin {
+	100%{ transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-o-keyframes cssload-spin {
+	100%{ -o-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-ms-keyframes cssload-spin {
+	100%{ -ms-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-webkit-keyframes cssload-spin {
+	100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+}
+
+@-moz-keyframes cssload-spin {
+	100%{ -moz-transform: rotate(360deg); transform: rotate(360deg); }
+}
+		
+	</style>
+  </head>
+  <body>
+	<div id="outerWrapper">
+		<div id="addKodiHost" class="container" style="display: none; z-index: 1005;">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Add a new kodi server</h3>
+					<div id="invalidPort" style="display: none;"><font color="red">The entered port is not valid ...</font></div>
+					<div id="invalidHost" style="display: none;"><font color="red">The entered host address is not valid ...</font></div>
+					Host:<input type="text" id="newKodiHost"/><br/>
+					Port:<input type="text" id="newKodiPort"/><br/>
+					<button id="submitNewKodiHost" type='button'>Add</button><button id="cancelNewKodiHost" type='button'>Cancel</button>
+				</div>
+			</div>
+		</div>
+		<div id="deleteKodiHost" class="container" style="display: none; z-index: 1005;">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Delete kodi server?</h3>
+					<button id="submitDeleteKodiHost" type='button'>Yes</button><button id="cancelDeleteKodiHost" type='button'>Cancel</button>
+				</div>
+			</div>
+		</div>
+		<div id="noneAddKodiHost" style=" z-index: 1005;">
+			<div id="currentKodiHostWrapper" class="container">
+				Kodi host: <select id="selectKodiHost"></select><a id="addKodiHostBtn" href="#"><img src="./plus-button.png"/></a><a id="delKodiHostBtn" href="#"><img src="./minus-button.png"/></a>
+			</div>
+				<div id="spinner">
+				<div class="cssload-zenith"></div>
+				</div>
+			<div id="innerWrapper" class="container">
+				<div id="ifKodiOnline" style="display: none;">
+					<div id="ifKodiAuthenticated" style="display: none;">
+						<div class="row">
+							<div class="col-xs-12">
+								<h3>Send a video URL to Kodi</h3>
+								<form>
+								<div class="form-group">
+									<label for="sendUrlToKodiInput">Video URL</label>
+									<input id="sendUrlToKodiInput" onkeypress="return runScript(event)"/>
+								</div>
+								<p>
+								
+								<div id="historyWrapper" style="display: none;">
+									<a id="toggleHistoryLink" href="#"><img style="display: inline-block;" id="openHistoryImg" src="./open.png"/><img id="closeHistoryImg" style="display: none;" src="./close.png"/></a> Most Recently Sent URLs
+									<ol id="history" style="display: none;">
+									</ol>
+								</div>
+								</p>
+								
+									<button id="sendUrlToKodiSubmit" class="btn btn-default" type="button" >Play On Kodi</button>
+									<button id="sendUrlToKodiQueueSubmit" class="btn btn-default" type="button" >Queue On Kodi</button>
+								</form>
+								
+								<div id="playlistWrapper" style="display: none;">
+									<h3>Current Playlist:</h3>
+									<ol id="playlist">
+									</ol>
+									
+									<div id="progress" class="progress">
+									  <div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%; color: #000;">
+										<span id="progressBarSpan"></span>
+									  </div>
+									</div>
+								
+									<div id="controlWrapper">
+										<h3>Remote Control</h3>
+										<div class="container">
+										<div class="row">
+											<div class="col-xs-1"><a id="lastLink" href="#"><img src="./last.png"/></a></div>
+											<div class="col-xs-1"><a id="rewindLink" href="#"><img src="./rewind.png"/></a></div>
+											<div class="col-xs-1"><a id="stopLink" href="#"><img src="./stop.png"/></a></div>
+											<div class="col-xs-1"><a id="playLink" href="#"><img style="display: inline-block;" id="playImg" src="./play.png"/><img id="pauseImg" style="display: none;" src="./pause.png"/></a></div>
+											<div class="col-xs-1"><a id="forwardLink" href="#"><img src="./forward.png"/></a></div>
+											<div class="col-xs-1"><a id="nextLink" href="#"><img src="./next.png"/></a></div>
+											<div class="col-xs-1">
+												<a id="muteLink" href="#"><img style="display: inline-block;" id="soundImg" src="./speaker-volume.png"/><img id="muteImg" style="display: none;" src="./mute.png"/></a>
+											</div>
+											<div class="col-xs-3">
+												<div id="volume" class="progress">
+												  <div id="volumeBar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%; color: #000;">
+													<span id="volumeBarSpan"></span>
+												  </div>
+												</div>
+											</div>
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="ifKodiNeedsAuthentication" style="display: block;">
+						<div class="row">
+							<div class="col-md-12">
+							<h3>Kodi requires you to authenticate:</h3>
+							<div id="invalidLogin"><font color="red">Wrong login! Please try again ...</font></div>
+							Username:<input type="text" id="kodiUsername"/><br/>
+							Password:<input type="password" id="kodiPassword"/><br/>
+							<button id="kodiLoginButton" type='button'>Login</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="ifKodiOffline" style="display: block;">
+					<div class="row">
+						<div class="col-md-12">
+						<h3>We could not connect to Kodi</h3>
+						Please verify your kodi configuration in the add-on settings.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,50 @@
+{
+  "title": "PlayUrlOnKodi",
+  "name": "playurlonkodi",
+  "version": "0.0.18",
+  "description": "A firefox addon which posts HTTP requests to Kodi using JSON-RPC to play or queue video URLs. To-date this add-on only supports direct links to videos and YouTube links. In order to play YouTube links successfully, the Kodi YouTube plugin is required.",
+  "main": "index.js",
+  "author": "Christian Wiwie",
+  "engines": {
+    "firefox": ">=38.0a1",
+    "fennec": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ],
+  "permissions": {
+    "multiprocess": true
+  },
+  "preferences": [{
+        "name": "kodihost",
+        "title": "Kodi host",
+        "description": "The address of the kodi host without port",
+        "type": "string",
+        "value": ""
+    },
+    {
+        "name": "kodiport",
+        "title": "Kodi port",
+        "description": "The port of the kodi host",
+        "type": "string",
+        "value": ""
+    },
+    {
+        "name": "selectedkodihost",
+        "title": "Currently selected kodi host",
+        "description": "The 0-based index of the currently selected kodi host",
+        "type": "integer",
+        "value": -1,
+	"hidden": true
+    },
+    {
+        "name": "kodihistory",
+        "title": "History of played URLs",
+        "description": "History of URLs played on kodi",
+        "type": "string",
+        "value": ""
+    }
+
+  ]
+}
